@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["DOM", "ES6", "DOM.Iterable", "ScriptHost"],
+    "outDir": "./lib",
+    "module": "commonjs",
+
+    "noEmitOnError": true,
+    "declaration": false,
+    "removeComments": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "alwaysStrict": true,
+    "noUnusedLocals": true,
+    "noImplicitThis": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+
+    "typeRoots": [
+      "node_modules/@types",
+      "typings"
+    ]
+  },
+  "include": [
+    "src/*.ts"
+  ],
+  "exclude": [
+    "src/*.spec.ts"
+  ]
+}
