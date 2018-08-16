@@ -1,17 +1,17 @@
 {
   "name": "manifest-json-webpack-plugin",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Webpack plugin to create a manifest.json file",
   "main": "./lib/index.js",
   "scripts": {
     "clean": "rimraf ./lib && rimraf ./coverage",
     "clean:packages": "echo ==== IGNORE THIS NEXT ERROR ==== && rimraf ./node_modules",
-    "build": "npm run clean && tsc -p ./tsconfig.json && npm run build:clean",
-    "build:clean": "rimraf ./lib/types.js",
+    "build": "yarn clean && tsc -p ./tsconfig.json && yarn build:clean",
+    "build:clean": "rimraf ./lib/types.js*",
     "lint": "tslint -p tsconfig.json -c tslint.json -e **/node_modules/**",
-    "reset": "rimraf package-lock.json && npm run clean:packages",
-    "test": "npm run build && jest --no-cache --config jest.json",
-    "test:watch": "npm run build && jest --no-cache --config jest.json --watchAll"
+    "reset": "rimraf yarn.lock && yarn clean:packages",
+    "test": "yarn build && jest --no-cache --config jest.json",
+    "test:watch": "yarn build && jest --no-cache --config jest.json --watchAll"
   },
   "author": "Tiago Marques",
   "license": "MIT",
