@@ -1,17 +1,29 @@
 import { Compiler } from 'webpack';
-import { RawSource, Source } from 'webpack-sources';
+import { RawSource } from 'webpack-sources';
 import * as parseFilepath from 'parse-filepath';
 import * as mime from 'mime-to-extensions';
-import { ManifestIcon, ConfigurationInput, Configuration } from './types';
-
-export interface AssetsObject {
-  [key: string]: Source;
-}
+import { ManifestIcon, Configuration, AssetsObject } from './types';
 
 const INDENTATION = 2;
 
-// tslint:disable-next-line no-default-export
-export default class ManifestJsonPlugin {
+export interface ConfigurationInput {
+  path: string;
+  pretty: boolean;
+  name: string;
+  description: string;
+  lang: string;
+  short_name?: string;
+  icons?: string | string[];
+  start_url?: string;
+  scope?: string;
+  dir?: string;
+  orientation?: string;
+  display?: string;
+  background_color?: string;
+  theme_color?: string;
+}
+
+class ManifestJsonPlugin {
   private config: ConfigurationInput;
   private assets: AssetsObject;
 
@@ -67,3 +79,5 @@ export default class ManifestJsonPlugin {
     };
   }
 }
+
+module.exports = ManifestJsonPlugin;

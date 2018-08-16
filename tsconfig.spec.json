@@ -1,13 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": ["DOM", "ES6", "DOM.Iterable", "ScriptHost"],
-    "outDir": "./lib",
+    "target": "es6",
     "module": "commonjs",
+    "outDir": "./lib",
 
     "sourceMap": true,
     "declaration": false,
-    "removeComments": true,
+    "removeComments": false,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
 
@@ -21,8 +20,8 @@
     "noFallthroughCasesInSwitch": true,
 
     "typeRoots": [
-      "node_modules/@types",
-      "typings"
+      "typings",
+      "node_modules/@types"
     ]
   },
   "include": [
