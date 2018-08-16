@@ -17,7 +17,7 @@ interface Configuration {
   theme_color?: string;
 }
 
-export = ManifestJsonPlugin;
+export default ManifestJsonPlugin;
 
 declare class ManifestJsonPlugin extends Plugin {
   constructor(configuration: Configuration);
