@@ -1,81 +1,71 @@
-import { Compiler } from 'webpack';
+import { Compiler, compilation } from 'webpack';
 import { RawSource } from 'webpack-sources';
 import * as parseFilepath from 'parse-filepath';
 import * as mime from 'mime-to-extensions';
-import { ManifestIcon, Configuration, AssetsObject } from './types';
+import { ManifestIcon, Options, AssetsObject } from './types';
 
 const INDENTATION = 2;
 
-export interface ConfigurationInput {
-  path: string;
-  pretty: boolean;
-  name: string;
-  description: string;
-  lang: string;
-  short_name?: string;
-  icons?: string | string[];
-  start_url?: string;
-  scope?: string;
-  dir?: string;
-  orientation?: string;
-  display?: string;
-  background_color?: string;
-  theme_color?: string;
-}
-
 class ManifestJsonPlugin {
-  private config: ConfigurationInput;
-  private assets: AssetsObject;
+  private options: Options;
+  private indentation: number;
+  private path: string;
 
-  constructor(config: ConfigurationInput) {
-    this.config = config;
-    this.assets = {};
+  constructor(options: Options) {
+    this.options = options;
+    this.indentation = (this.options.pretty && INDENTATION) || 0;
+    this.path = `${this.options.path || ''}/manifest.json`.replace('//', '/');
   }
 
   public apply(compiler: Compiler) {
-    compiler.plugin('emit', (compilation: { assets: AssetsObject }, done: Function) => {
-      this.assets = compilation.assets;
-      compilation.assets[`${this.config.path || ''}/manifest.json`] = this.getManifest();
-      done();
-    });
+    compiler.hooks.emit.tapAsync(
+      'ManifestJsonPlugin',
+      (compilationObject: compilation.Compilation, done: Function) => {
+        compilationObject.assets[this.path] = this.getManifestSource(compilationObject.assets);
+        done();
+      },
+    );
   }
 
-  private getManifest(): RawSource {
-    const manifestJson: Configuration = {
-      name: this.config.name,
-      short_name: this.config.short_name || this.config.name,
-      description: this.config.description,
-      lang: this.config.lang,
-      icons: this.getIcons(),
-      start_url: this.config.start_url || '.',
-      scope: this.config.scope || '/',
-      dir: this.config.dir || 'ltr',
-      orientation: this.config.orientation || 'portrait-primary',
-      display: this.config.display || 'browser',
-      background_color: this.config.background_color || 'white',
-      theme_color: this.config.theme_color || 'black',
-    };
-    const indentation = this.config.pretty && INDENTATION || undefined;
-    return new RawSource(JSON.stringify(manifestJson, null, indentation));
+  private getManifestSource(assets: AssetsObject): RawSource {
+    return new RawSource(JSON.stringify({
+      name: this.options.name,
+      short_name: this.options.short_name || this.options.name,
+      description: this.options.description,
+      lang: this.options.lang,
+      icons: this.getIcons(assets),
+      start_url: this.options.start_url || '.',
+      scope: this.options.scope || '/',
+      dir: this.options.dir || 'ltr',
+      orientation: this.options.orientation || 'portrait-primary',
+      display: this.options.display || 'browser',
+      background_color: this.options.background_color || 'white',
+      theme_color: this.options.theme_color || 'black',
+    }, null, this.indentation));
   }
 
-  private getIcons(): ManifestIcon[] {
+  private getIcons(assets: AssetsObject): ManifestIcon[] {
     let icons: string[] = [];
-    if (this.config.icons && typeof this.config.icons === 'string') {
-      icons = Object.keys(this.assets)
-        .filter(asset => asset.indexOf(this.config.icons as string) === 0);
-    } else if (this.config.icons && typeof this.config.icons === 'object' && this.config.icons.length) {
-      icons = this.config.icons;
+    if (this.options.icons && typeof this.options.icons === 'string') {
+      icons = Object.keys(assets)
+        .filter(asset => asset.indexOf(this.options.icons as string) === 0);
+    } else if (
+      this.options.icons &&
+      typeof this.options.icons === 'object' &&
+      this.options.icons.length
+    ) {
+      icons = this.options.icons;
     }
-    return icons.map(icon => this.iconToManifest(icon)).filter(icon => icon.type.indexOf('image/') === 0);
+    return icons.map(icon => this.iconToManifest(icon))
+      .filter(icon => icon.type.indexOf('image/') === 0);
   }
 
-  private iconToManifest(file: string): ManifestIcon {
-    const sizes = (new RegExp('[0-9]+x[0-9]+')).exec(parseFilepath(file).name);
+  private iconToManifest(src: string): ManifestIcon {
+    const sizes = (new RegExp('[0-9]+x[0-9]+')).exec(parseFilepath(src).name);
     return {
-      src: file,
-      type: mime.lookup(file),
-      sizes: sizes && sizes[sizes.length - 1] || undefined,
+      src,
+      type: mime.lookup(src),
+      sizes: (sizes && sizes[sizes.length - 1]) || undefined,
     };
   }
 }

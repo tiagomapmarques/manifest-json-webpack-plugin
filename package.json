@@ -1,6 +1,6 @@
 {
   "name": "manifest-json-webpack-plugin",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Webpack plugin to create a manifest.json file",
   "main": "./lib/index.js",
   "scripts": {
