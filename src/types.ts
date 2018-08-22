@@ -1,4 +1,3 @@
-
 import { Source } from 'webpack-sources';
 
 export interface AssetsObject {
@@ -11,17 +10,19 @@ export interface ManifestIcon {
   sizes?: string | string[];
 }
 
-export interface Configuration {
+export interface Options {
+  path: string;
+  pretty: boolean;
   name: string;
-  short_name: string;
   description: string;
   lang: string;
-  icons: ManifestIcon[];
-  start_url: string;
-  scope: string;
-  dir: string;
-  orientation: string;
-  display: string;
-  background_color: string;
-  theme_color: string;
+  short_name?: string;
+  icons?: string | string[];
+  start_url?: string;
+  scope?: string;
+  dir?: string;
+  orientation?: string;
+  display?: string;
+  background_color?: string;
+  theme_color?: string;
 }
