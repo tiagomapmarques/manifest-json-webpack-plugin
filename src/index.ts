@@ -18,9 +18,13 @@ class ManifestJsonPlugin {
   }
 
   public apply(compiler: Compiler) {
-    compiler.hooks.emit.tap('ManifestJsonPlugin', (compilationObject: compilation.Compilation) => {
-      compilationObject.assets[this.path] = this.getManifestSource(compilationObject.assets);
-    });
+    compiler.hooks.emit.tapAsync(
+      'ManifestJsonPlugin',
+      (compilationObject: compilation.Compilation, done: Function) => {
+        compilationObject.assets[this.path] = this.getManifestSource(compilationObject.assets);
+        done();
+      },
+    );
   }
 
   private getManifestSource(assets: AssetsObject): RawSource {
