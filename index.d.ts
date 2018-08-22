@@ -3,17 +3,12 @@ import { Plugin, Compiler } from 'webpack';
 export = ManifestJsonPlugin;
 
 declare class ManifestJsonPlugin extends Plugin {
-    private config;
-    private assets;
-    constructor(config: ManifestJsonPlugin.ConfigurationInput);
+    constructor(config: ManifestJsonPlugin.Options);
     apply(compiler: Compiler): void;
-    private getManifest;
-    private getIcons;
-    private iconToManifest;
 }
 
 declare namespace ManifestJsonPlugin {
-    interface ConfigurationInput {
+    interface Options {
         path: string;
         pretty: boolean;
         name: string;
